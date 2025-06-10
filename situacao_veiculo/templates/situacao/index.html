@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAATA Brasil - Controle de Acesso ao Suporte</title>
+    <link rel="stylesheet" href="{% static 'situacao/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-text">EAATA</span>
+                <span class="logo-brasil">BRASIL</span>
+            </div>
+            <h1 class="title">CONTROLE DE ACESSO AO SUPORTE</h1>
+        </header>
+        
+        <main class="content">
+            <form method="POST" action="{% url 'buscar_serial' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="serie">Nº Série</label>
+                    <input type="text" id="serie" name="serial" class="form-control" 
+                           value="{{ request.POST.serial }}" required>
+                    <button type="submit" class="btn-buscar">Buscar</button>
+                </div>
+            </form>
+
+            {% if cliente %}
+            <div class="section">
+                <h2 class="section-title">Dados Cliente:</h2>
+                <div class="form-group">
+                    {{ cliente.nome | yesno:"talvez" }}
+                </div>
+                <div class="form-group">
+                    
+                    {{ cliente.cnpj}}
+                </div>
+                <div class="form-group">
+                    {{ cliente.tel }}
+                </div>
+                <div class="form-group">
+                    {{ cliente.equipamento }}
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Status de Uso</h2>
+                <div class="status-box {{ status }}" id="status">
+                    <p class="status-text">{{ status_message }}</p>
+                </div>
+            </div>
+            {%else%}
+            <div class="section">
+                <h2 class="section-title">Dados Cliente:</h2>
+                <div class="form-group">
+                    SEM DADOS
+                </div>
+                <div class="form-group">
+                    SEM DADOS
+                </div>
+                <div class="form-group">
+                    SEM DADOS
+                </div>
+                <div class="form-group">
+                    SEM DADOS
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Status de Uso</h2>
+                <div class="status-box sem" id="status">
+                    <p class="status-text">SEM DADOS</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="footer" id="message">
+                <p class="note">{{ mensagem }}</p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
